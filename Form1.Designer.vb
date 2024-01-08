@@ -158,6 +158,7 @@ Partial Class Form1
         Lst_MailMerge.Location = New Point(25, 89)
         Lst_MailMerge.Name = "Lst_MailMerge"
         Lst_MailMerge.Size = New Size(163, 674)
+        Lst_MailMerge.Sorted = True
         Lst_MailMerge.TabIndex = 4
         ' 
         ' ToolStripContainer1
@@ -174,7 +175,7 @@ Partial Class Form1
         ' 
         ' Btn_Test
         ' 
-        Btn_Test.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        Btn_Test.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0)
         Btn_Test.Location = New Point(30, 47)
         Btn_Test.Name = "Btn_Test"
         Btn_Test.Size = New Size(49, 25)
@@ -184,7 +185,7 @@ Partial Class Form1
         ' 
         ' Btn_Merge
         ' 
-        Btn_Merge.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        Btn_Merge.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0)
         Btn_Merge.Location = New Point(121, 47)
         Btn_Merge.Name = "Btn_Merge"
         Btn_Merge.Size = New Size(67, 25)
@@ -219,7 +220,7 @@ Partial Class Form1
         Controls.Add(Lst_MailMerge)
         Controls.Add(TextBox)
         Controls.Add(MenuStrip1)
-        Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0)
         MainMenuStrip = MenuStrip1
         Margin = New Padding(4)
         Name = "Form1"

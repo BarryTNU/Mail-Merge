@@ -3,9 +3,11 @@ Imports System.Diagnostics.Metrics
 Imports System.IO
 Imports System.Net
 Imports System.Reflection
+Imports System.Runtime.CompilerServices
 Imports System.Runtime.Intrinsics
 Imports System.Windows.Forms.AxHost
 Imports Microsoft.VisualStudio.Shell.Interop
+Imports System.Globalization
 
 
 Public Class Form1
@@ -32,7 +34,7 @@ Public Class Form1
     Public SeriesPoints As String = "57"
     Public SeriesPlace As String = "1"
     Public YtOwner As String = "Barry Campbell"
-    Public XtianName As String = ""
+    Public XtianName As String = "Barry"
     Public CurrentRegatta As String = "EASTER2023"
     Public YtName As String = "Jen"
     Public YtClass As String = "Noelex"
@@ -54,7 +56,7 @@ Public Class Form1
     Public DocumentFilePath = File_Path & "Documents\"
     Public LetterFilePath = File_Path & "Documents\Letters\"
     Public MergeFilePath = File_Path & "Documents\Merge\"
-
+    Public InString As InterpolatedStringHandlerArgumentAttribute
 
     ReadOnly ColourBlack = System.Drawing.Color.Black
     ReadOnly ColourRed = System.Drawing.Color.Red
@@ -98,36 +100,68 @@ Public Class Form1
         Dim StringToMerge As String = TextBox.Text
         PrintToolStripMenuItem.Visible = True
         PrintToolStripMenuItem1.Visible = True
-        LetterMrg = ParseDoc(StringToMerge)
+        LetterMrg = ParseDoc(StringToMerge) ' Convert the MailMerge string to a concatenated string ({ and } is replaced with " & ")
+        ' MessageBox.Show(LetterMrg)
+
         '' This is the Play Room
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 
+        Dim s2 = $"{YtName}  Is  a   {YtType}"
+        MsgBox(s2)
+
+
+
+
+
+        MsgBox(LetterMrg)
+        TextBox.Text = s2
 
 
 
 
 
 
-
-
-
-
-        'MessageBox.Show(NewString)
-
-        '  TextBox.Text = LetterMrg
-        fWriter = New StreamWriter(fPath & "MergedLetter.txt")
-        fWriter.Write(LetterMrg)
-        fWriter.Close()
+        '   fWriter = New StreamWriter(fPath & "MergedLetter.txt")
+        '  fWriter.Write(LetterMrg)
+        '   fWriter.Close()
 
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
     End Sub
+    Private Function StringBuilderTest(StringToSplit) As String
+        Dim builder As New System.Text.StringBuilder
+        Dim NewString As String = ""
+        Record_Field = Split(StringToSplit, "&")
+        Dim l As Integer = UBound(Record_Field) - 1
+        For i = 0 To l
+            builder.Append(Record_Field(i))
+        Next
 
+
+        Return builder.ToString
+    End Function
+
+
+
+    Function ParseDoc(StrLetter As String)
+        Dim LetterText As String = ""
+        StrLetter = ChrW(34) & StrLetter : StrLetter += ChrW(34) ' Add quotes to the beginning and end of the letter
+        LetterText = Replace(StrLetter, ChrW(123), ChrW(32) & ChrW(34) & " $ " & ChrW(32), 1) 'Replace {
+        StrLetter = Replace(LetterText, ChrW(125), ChrW(32) & " $ " & ChrW(34) & ChrW(32), 1) ' Replace }
+        ParseDoc = StrLetter
+    End Function
+
+
+
+    ' KEEP OUT OF HERE
 
     ' ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
     'All subs below are to do with setting  up the form, Loading and saving, and other housekeeping
+
+
+
     Sub LoadListBox()
         With Lst_MailMerge
 
@@ -220,7 +254,7 @@ Commodore"
         Testfile(sender, e)
     End Sub
 
-    Private Sub LoadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadToolStripMenuItem.Click, LoadToolStripMenuItem1.Click
+    Private Sub LoadToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoadToolStripMenuItem.Click, LoadToolStripMenuItem1.Click 'LoadToolStripMenuItem.Click, LoadToolStripMenuItem1.Click
         Dim fPath = LetterFilePath
         Dim MergeFile As String
 
@@ -280,7 +314,7 @@ Commodore"
 
     End Sub
 
-    Private Sub SaveToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles SaveToolStripMenuItem.Click, SaveToolStripMenuItem1.Click
+    Private Sub SaveToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles SaveToolStripMenuItem.Click, SaveToolStripMenuItem1.Click 'Handles SaveToolStripMenuItem.Click, SaveToolStripMenuItem1.Click
         If Letter_File_Path = "" Then SaveAsToolStripMenuItem_Click(sender, e)
 
         Dim fPath As String = ""
@@ -295,13 +329,7 @@ Commodore"
         End Try
     End Sub
 
-    Function ParseDoc(StrLetter As String)
-        Dim LetterText As String = ""
-        StrLetter = ChrW(34) & StrLetter : StrLetter += ChrW(34) ' Add quotes to the beginning and end of the letter
-        LetterText = Replace(StrLetter, ChrW(123), ChrW(32) & ChrW(34) & " & " & ChrW(32), 1) 'Replace {
-        StrLetter = Replace(LetterText, ChrW(125), ChrW(32) & " & " & ChrW(34) & ChrW(32), 1) ' Replace }
-        ParseDoc = StrLetter
-    End Function
+
 
     Sub CheckFolderExists(FolderName)
         Dim letter As String = ""
