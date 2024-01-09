@@ -42,7 +42,6 @@ Partial Class Form1
         Btn_Test = New Button()
         Btn_Merge = New Button()
         OpenFileDialog1 = New OpenFileDialog()
-        PrintPreviewControl1 = New PrintPreviewControl()
         PrintDocument1 = New Printing.PrintDocument()
         PageSetupDialog1 = New PageSetupDialog()
         PrintDialog1 = New PrintDialog()
@@ -175,7 +174,7 @@ Partial Class Form1
         ' 
         ' Btn_Test
         ' 
-        Btn_Test.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0)
+        Btn_Test.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         Btn_Test.Location = New Point(30, 47)
         Btn_Test.Name = "Btn_Test"
         Btn_Test.Size = New Size(49, 25)
@@ -185,7 +184,7 @@ Partial Class Form1
         ' 
         ' Btn_Merge
         ' 
-        Btn_Merge.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0)
+        Btn_Merge.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         Btn_Merge.Location = New Point(121, 47)
         Btn_Merge.Name = "Btn_Merge"
         Btn_Merge.Size = New Size(67, 25)
@@ -197,13 +196,6 @@ Partial Class Form1
         ' 
         OpenFileDialog1.FileName = "OpenFileDialog1"
         ' 
-        ' PrintPreviewControl1
-        ' 
-        PrintPreviewControl1.Location = New Point(410, 25)
-        PrintPreviewControl1.Name = "PrintPreviewControl1"
-        PrintPreviewControl1.Size = New Size(530, 32)
-        PrintPreviewControl1.TabIndex = 8
-        ' 
         ' PrintDialog1
         ' 
         PrintDialog1.UseEXDialog = True
@@ -213,14 +205,13 @@ Partial Class Form1
         AutoScaleDimensions = New SizeF(10F, 21F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(1406, 812)
-        Controls.Add(PrintPreviewControl1)
         Controls.Add(Btn_Merge)
         Controls.Add(Btn_Test)
         Controls.Add(ToolStripContainer1)
         Controls.Add(Lst_MailMerge)
         Controls.Add(TextBox)
         Controls.Add(MenuStrip1)
-        Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0)
+        Font = New Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
         MainMenuStrip = MenuStrip1
         Margin = New Padding(4)
         Name = "Form1"
@@ -251,7 +242,6 @@ Partial Class Form1
     Friend WithEvents Btn_Test As Button
     Friend WithEvents Btn_Merge As Button
     Friend WithEvents OpenFileDialog1 As OpenFileDialog
-    Friend WithEvents PrintPreviewControl1 As PrintPreviewControl
     Friend WithEvents PrintDocument1 As Printing.PrintDocument
     Friend WithEvents PageSetupDialog1 As PageSetupDialog
     Friend WithEvents PrintDialog1 As PrintDialog
