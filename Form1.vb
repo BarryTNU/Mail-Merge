@@ -99,16 +99,14 @@ Public Class Form1
         PrintToolStripMenuItem1.Visible = True
 
         'disable this to use Textbox.text without conversion
-        'LetterMrg = ParseDoc(StringToMerge) ' Convert the MailMerge string to a concatenated string ({ and } is replaced with " & ")
+        'LetterMrg = ParseDoc(StringToMerge) ' Convert the MailMerge string to a concatenated string . "{" and "}" are replaced with " & "
         'TextBox.Text = LetterMrg
         '
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         '' This is the Play Room
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-        Dim NewFile As String = StringBuilderTest(TextBox.Text) 'Doesn't do it
-
-
+        ' Dim NewFile As String = StringBuilderTest(TextBox.Text) 'Doesn't do it
 
 
 
@@ -118,9 +116,13 @@ Public Class Form1
         TextBox.Text = NewFile
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-        '   fWriter = New StreamWriter(fPath & "MergedLetter.txt")
-        '  fWriter.Write(LetterMrg)
-        '   fWriter.Close()
+
+        ' TextBox.Text = NewFile
+        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+        fWriter = New StreamWriter(fPath & YtSailNr & ".txt")
+        fWriter.Write(TextBox.Text)
+        fWriter.Close()
 
 
     End Sub
