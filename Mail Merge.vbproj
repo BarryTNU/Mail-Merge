@@ -16,6 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="GemBox.Document" Version="35.0.1606" />
+    <PackageReference Include="GemBox.Pdf" Version="17.0.1474" />
+    <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="24.1.45" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="My Project\Application.Designer.vb">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
