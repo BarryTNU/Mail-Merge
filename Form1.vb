@@ -14,7 +14,7 @@ Imports GemBox.Document
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock
 
-
+' Backed up 12 Jan 5.10pm
 
 Public Class Form1
 
@@ -294,7 +294,7 @@ MergeTestLetter:
         ' This is dummy data for testing.
         'In the YRM program this data is updated for each competitor as their letter in being merged, prior to saving.
 
-        Data = New With
+        data = New With
                    {
         .MemName = "Barry Campbell",
         .eMail = "barryTNU@gmail.com",
