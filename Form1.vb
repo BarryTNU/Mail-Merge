@@ -137,19 +137,23 @@ Public Class Form1
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         '' This is the Play Room
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-        ' GoTo DateFormat
-        'GoTo MergeTestLetter
-        GoTo MergefromTextBox
+        ' GoTo DateFormat '(Trivial, but it Works)
+        'GoTo MergeTestLetter' (Think I had this sort of working, but not any longer. Don't know what happened.)
+        GoTo MergefromTextBox '(Still playing with this.  Ideally this is what I want to happen)
 
 
         Exit Sub
 
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 MergefromTextBox:
+        Test_Letter = TextBox.Text
         doc = New DocumentModel()
+
         ' Add a new document content.
 
         Dim MergeTemplate As String = ParseDoc(Test_Letter)
+        ' Dim MergeTemplate As String = Test_Letter
+
         doc.Sections.Add(New Section(doc, New Paragraph(doc, MergeTemplate)))
 
 
@@ -188,6 +192,7 @@ MergefromTextBox:
         doc.Save(MergeFilePath & "Document.pdf")
 
         MsgBox(MergeFilePath & "Document.txt",, "Document saved as ")
+
         Exit Sub
 
         'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
@@ -254,13 +259,6 @@ MergeTestLetter:
 
     End Sub
 
-
-
-
-
-
-
-
     ' ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
     'All subs below are to do with setting  up the form, Loading and saving, and other housekeeping
 
@@ -309,10 +307,8 @@ MergeTestLetter:
     End Sub
 
     Sub Load_Data()
-        ' This is dummy data for testing.
-        'In the YRM program this data is updated for each competitor as their letter in being merged, prior to saving.
 
-        datasource = New With
+        dataSource = New With
                    {
         .MemName = "Barry Campbell",
         .eMail = "barryTNU@gmail.com",
@@ -349,28 +345,33 @@ MergeTestLetter:
             Return StrLetter
             Exit Function
         End If
-        StrLetter = ChrW(34) & StrLetter : StrLetter += ChrW(34) ' Add quotes to the beginning and end of the letter
+        StrLetter = ChrW(34) & StrLetter : StrLetter += ChrW(34) ' Add   quotes to the beginning and end of the letter
         LetterText = Replace(StrLetter, ChrW(123), ChrW(34) & ChrW(32) & ChrW(38) & ChrW(32), 1) 'Replace { with &
         StrLetter = Replace(LetterText, ChrW(125), ChrW(32) & ChrW(38) & ChrW(32) & ChrW(34), 1) ' Replace } with &
         Return StrLetter
+
+        MsgBox(StrLetter)
     End Function
 
-    Function Testfile() Handles Btn_Test.Click
+    Sub Testfile() Handles Btn_Test.Click
         ' A dummy letter for testing
+        'This merge works,
+        'However the same format doesn't work if it's loaded as a file,
+        'It only works if it's included in the program like this.
+        'Obviously not the desired result.
 
         Dim l As Integer = InStr(MemName, " ")
         Me.XtianName = Mid(MemName, 1, l)
-
 
         Dim Merge_Template As String = "Dear " & XtianName & "
 
 Thank you for participating in our " & CurrentRegatta & " regatta.
 
-Here are the results Of this regatta, and your individual results.
+Here are the results of this regatta, and your individual results.
 
 The overall winner of the Regatta was " & SeriesWinner & " with " & WinnersPoints & " points.
 
-Your yacht " & YtName & " was placed " & SeriesPlace & " with " & SeriesPoints & " points.
+Your yacht ," & YtName & ", was placed " & SeriesPlace & " with " & SeriesPoints & " points.
 
 " & YtName & " was also entered in the " & YtClass & " class, and was competing with " & NrInClass & " other yachts in that class, and also " & NumberOfTypes & " similar yachts in the " & YtType & "
 category.
@@ -385,10 +386,9 @@ Yours sincerely
 
 Commodore."
 
-        TextBox.Text = Merge_Template  
-        Return Test_Letter  '
+        TextBox.Text = Merge_Template
 
-    End Function
+    End Sub
 
     Private Sub Lst_MailMerge_Click(sender As Object, e As EventArgs) Handles Lst_MailMerge.Click 'Handles Lst_MailMerge.Click
         My.Computer.Clipboard.SetText(Lst_MailMerge.SelectedItem, TextDataFormat.Text) 'Copy to Clipboard
