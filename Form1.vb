@@ -14,7 +14,15 @@ Imports GemBox.Document
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock
 
-' Backed up 12 Jan 5.10pm
+' Backed up 13 Jan 10am
+
+'Dion   I'm not sure if this is the way to go, but I've installed the GemBox library, which includes Mail Merge.
+'Having difficulty coming to grips with it,  but so  far it is the best option I've come across.
+'What I want to achieve is to write a letter, inserting the Mail merge fields, then use this template to send this letter to
+'all, or selected entrants in the regatta.
+'I thought this would be a no brainer.  Can't believe it's so difficult.
+'Hopeng that with your wealth of experience you can crack it.
+'Wondering if HTML   might be the way to go. Seems to be a few mail merge apps using this.
 
 Public Class Form1
 
@@ -30,7 +38,12 @@ Public Class Form1
 
     Dim Test_Letter As String = ""
 
-    Public data
+
+    'These variable fields are used by the YRM program.
+    'They are set by iterating through each yacht in the RegattaPlaces ListView box, which has the results of every race,
+    'and also the Registrations.csv file, which has the competors names and addresses
+    'This is just dummy data for testing.
+
     Public LetterMrg As String = ""
     Public MergedLetter As String = ""
     Public Letter_Text As String = ""
@@ -59,7 +72,7 @@ Public Class Form1
     Public TypePoints As String = "58"
     Public YachtsInRegatta As String = "32"
 
-
+    Public dataSource ' The variables used in the merge
 
     Public File_Path As String = DefaultLongPath + Path.DirectorySeparatorChar ' This is the default file path  accessed by all modules
     Public DocumentFilePath = File_Path & "Documents\"
@@ -96,7 +109,7 @@ Public Class Form1
         LoadToolStripMenuItem1.BackColor = ColourGreen
         MergeToolStripMenuItem1.BackColor = ColourGreen
         SaveToolStripMenuItem1.BackColor = ColourGreen
-        Btn_Merge.Visible = False
+        ' Btn_Merge.Visible = False
         MergeToolStripMenuItem1.Visible = False
         PrintToolStripMenuItem.Visible = False
         PrintToolStripMenuItem1.Visible = False
@@ -114,8 +127,11 @@ Public Class Form1
         Dim StringToMerge As String = TextBox.Text
         Dim doc = New DocumentModel()
         Dim document As New DocumentModel()
-        Dim dataSource
 
+
+        Test_Letter = TextBox.Text
+
+        ' Test_Letter = ParseDoc(TextBox.Text)
 
 
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -123,24 +139,18 @@ Public Class Form1
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         ' GoTo DateFormat
         'GoTo MergeTestLetter
+        GoTo MergefromTextBox
 
 
+        Exit Sub
 
-
-
-        ' Exit Sub
-
-
-        TextBox.Text = NewFile
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
+MergefromTextBox:
         doc = New DocumentModel()
-        Test_Letter = ParseDoc(TextBox.Text)
         ' Add a new document content.
 
-        doc.Sections.Add(New Section(doc, New Paragraph(doc, Test_Letter)))
-
-
+        Dim MergeTemplate As String = ParseDoc(Test_Letter)
+        doc.Sections.Add(New Section(doc, New Paragraph(doc, MergeTemplate)))
 
 
         dataSource = New With
@@ -176,6 +186,8 @@ Public Class Form1
         doc.Save(MergeFilePath & "Document.txt")
         doc.Save(MergeFilePath & "Document.docx")
         doc.Save(MergeFilePath & "Document.pdf")
+
+        MsgBox(MergeFilePath & "Document.txt",, "Document saved as ")
         Exit Sub
 
         'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
@@ -204,6 +216,7 @@ DateFormat:
         doc.Save(MergeFilePath & "Document.txt")
         doc.Save(MergeFilePath & "Document.docx")
         doc.Save(MergeFilePath & "Document.pdf")
+        MsgBox(MergeFilePath & "Document.txt",, "Document saved as ")
 
 
         Exit Sub
@@ -211,22 +224,27 @@ DateFormat:
 
 MergeTestLetter:
 
+        Test_Letter = "The author is " & MemName
+
         ' Add document content.
-        doc.Sections.Add(New Section(doc, New Paragraph(doc, New Field(doc, FieldType.MergeField, Test_Letter))))
+        doc.Sections.Add(New Section(doc, New Paragraph(doc, New Field(doc, FieldType.Author, Test_Letter))))
 
         ' Save the document to a file.
-        doc.Save(LetterFilePath & "TemplateDocument.docx")
+        doc.Save(LetterFilePath & "TemplateDocument.txt")
 
         ' Initialize mail merge data source.
-        dataSource = New With {.ytname = "John Doe"}
+        dataSource = New With {.Author = "Barry Campbell"}
 
         ' Execute mail merge.
         doc.MailMerge.Execute(dataSource)
+        ' doc.MailMerge.Execute(data)
 
         ' Save to DOCX and PDF files.
         doc.Save(MergeFilePath & "Document.txt")
-        doc.Save(MergeFilePath & "Document.docx")
-        doc.Save(MergeFilePath & "Document.pdf")
+        ' doc.Save(MergeFilePath & "Document.docx")
+        ' doc.Save(MergeFilePath & "Document.pdf")
+
+        MsgBox(MergeFilePath & "Document.txt",, "Document saved as ")
 
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
@@ -294,7 +312,7 @@ MergeTestLetter:
         ' This is dummy data for testing.
         'In the YRM program this data is updated for each competitor as their letter in being merged, prior to saving.
 
-        data = New With
+        datasource = New With
                    {
         .MemName = "Barry Campbell",
         .eMail = "barryTNU@gmail.com",
@@ -326,11 +344,17 @@ MergeTestLetter:
     End Sub
     Function ParseDoc(StrLetter As String)
         Dim LetterText As String = ""
+        If InStr(StrLetter, ChrW(123)) = False Then
+            MsgBox("Not a Mail Merge Document", , "")
+            Return StrLetter
+            Exit Function
+        End If
         StrLetter = ChrW(34) & StrLetter : StrLetter += ChrW(34) ' Add quotes to the beginning and end of the letter
-        LetterText = Replace(StrLetter, ChrW(123), ChrW(34) & ChrW(32) & ChrW(38) & ChrW(32) & ChrW(123), 1) 'Replace {
-        StrLetter = Replace(LetterText, ChrW(125), ChrW(125) & ChrW(32) & ChrW(38) & ChrW(32) & ChrW(34), 1) ' Replace }
+        LetterText = Replace(StrLetter, ChrW(123), ChrW(34) & ChrW(32) & ChrW(38) & ChrW(32), 1) 'Replace { with &
+        StrLetter = Replace(LetterText, ChrW(125), ChrW(32) & ChrW(38) & ChrW(32) & ChrW(34), 1) ' Replace } with &
         Return StrLetter
     End Function
+
     Function Testfile() Handles Btn_Test.Click
         ' A dummy letter for testing
 
@@ -338,31 +362,30 @@ MergeTestLetter:
         Me.XtianName = Mid(MemName, 1, l)
 
 
-        Test_Letter = "Dear {XtianName}
+        Dim Merge_Template As String = "Dear " & XtianName & "
 
-Thank you for participating in our {CurrentRegatta} regatta.
+Thank you for participating in our " & CurrentRegatta & " regatta.
 
-Here are the results Of this regatta, And your individual results.
+Here are the results Of this regatta, and your individual results.
 
-The overall winner of the Regatta was {SeriesWinner} with {WinnersPoints} Points.
+The overall winner of the Regatta was " & SeriesWinner & " with " & WinnersPoints & " points.
 
-Your yacht {YtName} was placed {SeriesPlace} with {SeriesPoints} points.
+Your yacht " & YtName & " was placed " & SeriesPlace & " with " & SeriesPoints & " points.
 
-{YtName} was also entered in the {YtClass} Class, And was competing with {NrInClass} other yachts in that class, And also {NumberOfTypes} similar yachts in the {YtType} category.
+" & YtName & " was also entered in the " & YtClass & " class, and was competing with " & NrInClass & " other yachts in that class, and also " & NumberOfTypes & " similar yachts in the " & YtType & "
+category.
 
-The winning {YtClass} was {ClassWinner}, And your position In this Class was {ClassPosition}, with {ClassPoints} points.
+The winning " & YtClass & " was " & ClassWinner & ", and your position in this Class was " & ClassPosition & ", with " & ClassPoints & " points.
 
-The winning {YtType}was {TypeWinner}, And your position was {TypePosition} with {TypePoints} Points.
+The winning " & YtType & " was " & TypeWinner & ", and your position was " & TypePosition & " with " & TypePoints & " points.
 
-Thank you again for supporting our club. We look forward to seeing you at our next regatta. 
+Thank you again for supporting our club . We look forward to seeing you at our next regatta.
 
 Yours sincerely
 
-
 Commodore."
 
-
-        TextBox.Text = Test_Letter
+        TextBox.Text = Merge_Template  
         Return Test_Letter  '
 
     End Function
