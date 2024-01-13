@@ -21,7 +21,7 @@ Imports System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock
 'What I want to achieve is to write a letter, inserting the Mail merge fields, then use this template to send this letter to
 'all, or selected entrants in the regatta.
 'I thought this would be a no brainer.  Can't believe it's so difficult.
-'Hopeng that with your wealth of experience you can crack it.
+'Hoping that with your wealth of experience you can crack it.
 'Wondering if HTML   might be the way to go. Seems to be a few mail merge apps using this.
 
 Public Class Form1
@@ -41,7 +41,7 @@ Public Class Form1
 
     'These variable fields are used by the YRM program.
     'They are set by iterating through each yacht in the RegattaPlaces ListView box, which has the results of every race,
-    'and also the Registrations.csv file, which has the competors names and addresses
+    'and also the RegAddresses.csv file, which has the competors names and addresses
     'This is just dummy data for testing.
 
     Public LetterMrg As String = ""
